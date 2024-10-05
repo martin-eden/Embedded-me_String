@@ -26,12 +26,20 @@ using namespace me_String;
 using me_ManagedMemory::TManagedMemory;
 using me_MemorySegment::TMemorySegment; // for Print()
 
+/*
+  Return our data span
+*/
+me_MemorySegment::TMemorySegment TString::GetData()
+{
+  return Data.GetData();
+}
+
 // Copy from memory segment
 TBool TString::CopyFrom(
   me_MemorySegment::TMemorySegment Memseg
 )
 {
-  return Data.Set(Memseg);
+  return Data.LoadFrom(Memseg);
 }
 
 // Copy from ASCIIZ
@@ -39,7 +47,7 @@ TBool TString::CopyFrom(
   const TChar * Asciiz
 )
 {
-  return Data.Set(Asciiz);
+  return Data.LoadFrom(Asciiz);
 }
 
 // Copy from our specie
@@ -47,7 +55,7 @@ TBool TString::CopyFrom(
   TString String
 )
 {
-  return Data.Set(String.Data);
+  return Data.LoadFrom(&String.Data);
 }
 
 // Copy to provided memory segment
@@ -55,7 +63,7 @@ TBool TString::CopyTo(
   me_ManagedMemory::TManagedMemory * Memseg
 )
 {
-  return Memseg->Set(Data);
+  return Memseg->LoadFrom(&Data);
 }
 
 /*
@@ -123,7 +131,7 @@ void TString::Format(
 
   // If no memory for ASCIIZ, return
   // ASCIIZ requires one more byte for tail
-  if (!Asciiz.Reserve(MemoryRequired + 1))
+  if (!Asciiz.ResizeTo(MemoryRequired + 1))
   {
     return;
   }
@@ -138,8 +146,8 @@ void TString::Format(
 
     ReturnCode =
       vsnprintf(
-        (TChar *) Asciiz.Start.Addr,
-        Asciiz.Size,
+        (TChar *) Asciiz.GetData().Start.Addr,
+        Asciiz.GetSize(),
         FormatStr,
         Args
       );
@@ -148,8 +156,19 @@ void TString::Format(
   }
 
   // Finally! But if no memory for <Data>, return
-  if (!Data.Set((TChar *) Asciiz.Start.Addr))
+  if (!Data.LoadFrom(&Asciiz))
     return;
+
+  // Trim tail zero byte from ASCIIZ
+  Data.ResizeTo(Data.GetSize() - 1);
+}
+
+/*
+  [Debug] Print state and data to stdout
+*/
+void TString::PrintWrappings()
+{
+  Data.PrintWrappings();
 }
 
 /*
@@ -161,11 +180,7 @@ void me_String::Print(
   TString * String
 )
 {
-  TManagedMemory Memseg;
-
-  String->CopyTo(&Memseg);
-
-  Memseg.Print();
+  me_MemorySegment::Freetown::Print(String->GetData());
 }
 
 /*

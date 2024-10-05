@@ -7,6 +7,7 @@
 */
 
 #include <me_BaseTypes.h>
+#include <me_MemorySegment.h>
 #include <me_ManagedMemory.h>
 
 namespace me_String
@@ -14,6 +15,9 @@ namespace me_String
   class TString
   {
     public:
+      // Return our data span
+      me_MemorySegment::TMemorySegment GetData();
+
       // Copy from memory segment
       TBool CopyFrom(me_MemorySegment::TMemorySegment Memseg);
       // Copy from ASCIIZ
@@ -27,7 +31,10 @@ namespace me_String
       // Format string
       void Format(const TChar * FormatStr, ...);
 
-    protected:
+      // [Debug] Print state and data to stdout
+      void PrintWrappings();
+
+    private:
       me_ManagedMemory::TManagedMemory Data;
 
     private:

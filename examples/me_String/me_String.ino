@@ -35,10 +35,12 @@ void RunTest()
 
   TString String;
 
-  String.Format("Test [%2u.%u%u].\n", 3, 14, 15);
+  String.Format("Test [%02u.%u%u].\n", 3, 14, 15);
+  // String.PrintWrappings();
   Print(&String);
 
   String.Format("123\n");
+  // String.PrintWrappings();
   Print(&String);
 }
 
