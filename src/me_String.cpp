@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-04
+  Last mod.: 2024-10-07
 */
 
 /*
@@ -20,11 +20,13 @@
 #include <stdarg.h> // va_list, va_start, va_end
 #include <stdio.h> // vsnprintf()
 
-#include <me_MemorySegment.h> // for Print()
+#include <me_MemorySegment.h> // TMemorySegment
 
 using namespace me_String;
-using me_ManagedMemory::TManagedMemory;
-using me_MemorySegment::TMemorySegment; // for Print()
+
+using
+  me_ManagedMemory::TManagedMemory,
+  me_MemorySegment::TMemorySegment;
 
 /*
   Return our data span
@@ -172,17 +174,6 @@ void TString::PrintWrappings()
 }
 
 /*
-  Print string contents to stdout
-
-  .. I'm doing something wrong here.. it's identity call
-*/
-void me_String::Print(
-  TString * String
-)
-{
-  me_MemorySegment::Freetown::Print(String->GetData());
-}
-
-/*
   2024-10-04
+  2024-10-07
 */

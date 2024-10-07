@@ -3,7 +3,7 @@
 /*
   Author: Martin Eden
   Status: sketching
-  Last mod.: 2024-10-04
+  Last mod.: 2024-10-07
 */
 
 #include <me_BaseTypes.h>
@@ -39,11 +39,9 @@ namespace me_String
 
     private:
   };
-
-  // Public Print() for stdout
-  void Print(TString * String);
 }
 
 /*
   2024-10-04
+  2024-10-07
 */
