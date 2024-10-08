@@ -3,7 +3,7 @@
 /*
   Author: Martin Eden
   Status: sketching
-  Last mod.: 2024-10-07
+  Last mod.: 2024-10-08
 */
 
 #include <me_BaseTypes.h>
@@ -31,17 +31,13 @@ namespace me_String
       // Format string
       void Format(const TChar * FormatStr, ...);
 
-      // [Debug] Print state and data to stdout
-      void PrintWrappings();
-
     private:
       me_ManagedMemory::TManagedMemory Data;
-
-    private:
   };
 }
 
 /*
   2024-10-04
   2024-10-07
+  2024-10-08
 */

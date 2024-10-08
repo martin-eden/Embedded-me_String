@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-07
+  Last mod.: 2024-10-08
 */
 
 /*
@@ -17,10 +17,10 @@
 
 #include <me_BaseTypes.h>
 #include <me_ManagedMemory.h>
+#include <me_MemorySegment.h> // TMemorySegment
+
 #include <stdarg.h> // va_list, va_start, va_end
 #include <stdio.h> // vsnprintf()
-
-#include <me_MemorySegment.h> // TMemorySegment
 
 using namespace me_String;
 
@@ -163,14 +163,6 @@ void TString::Format(
 
   // Trim tail zero byte from ASCIIZ
   Data.ResizeTo(Data.GetSize() - 1);
-}
-
-/*
-  [Debug] Print state and data to stdout
-*/
-void TString::PrintWrappings()
-{
-  Data.PrintWrappings();
 }
 
 /*

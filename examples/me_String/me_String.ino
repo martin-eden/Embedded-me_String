@@ -2,24 +2,22 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-0
+  Last mod.: 2024-10-08
 */
 
 #include <me_String.h>
-#include <me_MemorySegment.h> // for Print
 
 #include <me_BaseTypes.h>
-#include <me_InstallStandardStreams.h>
 #include <me_UartSpeeds.h>
+#include <me_Console.h>
 
 void setup()
 {
-  Serial.begin(me_UartSpeeds::Arduino_Normal_Bps);
-  InstallStandardStreams();
+  Console.Init(me_UartSpeeds::Arduino_Normal_Bps);
 
-  printf("[me_String] Okay, we are here.\n");
+  Console.Print("[me_String] Okay, we are here.");
   RunTest();
-  printf("[me_String] Done.\n");
+  Console.Print("[me_String] Done.");
 }
 
 void loop()
@@ -30,22 +28,20 @@ void loop()
 
 void RunTest()
 {
-  using
-    me_String::TString,
-    me_MemorySegment::Freetown::Print;
+  me_String::TString String;
 
-  TString String;
+  String.Format("Test [%02u.%u%u].", 3, 14, 15);
+  Console.Print(String.GetData());
 
-  String.Format("Test [%02u.%u%u].\n", 3, 14, 15);
-  // String.PrintWrappings();
-  Print(String.GetData());
+  String.Format("123");
+  Console.Print(String.GetData());
 
-  String.Format("123\n");
-  // String.PrintWrappings();
-  Print(String.GetData());
+  String.Format("ABCDEF");
+  Console.Print(String.GetData());
 }
 
 /*
   2024-10-04
   2024-10-07
+  2024-10-08
 */
