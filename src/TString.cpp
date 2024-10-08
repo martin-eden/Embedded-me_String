@@ -1,4 +1,4 @@
-// String formatting and related functions
+// String and integers formatting
 
 /*
   Author: Martin Eden

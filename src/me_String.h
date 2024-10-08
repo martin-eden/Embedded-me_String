@@ -1,8 +1,7 @@
-// String formatting and related functions
+// String and integers formatting
 
 /*
   Author: Martin Eden
-  Status: sketched
   Last mod.: 2024-10-08
 */
 
