@@ -11,6 +11,8 @@
 #include <me_UartSpeeds.h>
 #include <me_Console.h>
 
+#include <me_ManagedMemory.h>
+
 void setup()
 {
   Console.Init(me_UartSpeeds::Arduino_Normal_Bps);
@@ -30,7 +32,7 @@ void RunTest()
 {
   me_String::TString String;
 
-  String.Format("Test [%02u.%u%u].", 3, 14, 15);
+  String.Format("Test [%02u.%02u %02u].", 3, 14, 15);
   Console.Print(String.GetData());
 
   String.Format("123");

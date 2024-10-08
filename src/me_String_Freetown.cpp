@@ -1,4 +1,4 @@
-// String formatting and related functions
+// Free functions for [me_String]
 
 /*
   Author: Martin Eden
@@ -22,60 +22,15 @@
 #include <stdarg.h> // va_list, va_start, va_end
 #include <stdio.h> // vsnprintf()
 
-using namespace me_String;
-
-using
-  me_ManagedMemory::TManagedMemory,
-  me_MemorySegment::TMemorySegment;
-
-/*
-  Return our data span
-*/
-me_MemorySegment::TMemorySegment TString::GetData()
-{
-  return Data.GetData();
-}
-
-// Copy from memory segment
-TBool TString::CopyFrom(
-  me_MemorySegment::TMemorySegment Memseg
-)
-{
-  return Data.LoadFrom(Memseg);
-}
-
-// Copy from ASCIIZ
-TBool TString::CopyFrom(
-  const TChar * Asciiz
-)
-{
-  return Data.LoadFrom(Asciiz);
-}
-
-// Copy from our specie
-TBool TString::CopyFrom(
-  TString String
-)
-{
-  return Data.LoadFrom(&String.Data);
-}
-
-// Copy to provided memory segment
-TBool TString::CopyTo(
-  me_ManagedMemory::TManagedMemory * Memseg
-)
-{
-  return Memseg->LoadFrom(&Data);
-}
-
 /*
   Format string
 
   Implementation uses vsnprintf().
 */
-void TString::Format(
+TBool me_String::Freetown::Format(
+  me_ManagedMemory::TManagedMemory * ResultSeg,
   const TChar * FormatStr,
-  ...
+  va_list Args
 )
 {
   /*
@@ -101,71 +56,60 @@ void TString::Format(
     Great API design guys!
   */
 
-  // "..." is now "Args"
-  va_list Args;
   // Return code from vsnprintf()
-  TSint_2 ReturnCode;
-  {
-    // "Args" are starting after last named argument. Which is "FormatStr"
-    va_start(Args, FormatStr);
+  TSint_2 ReturnCode = vsnprintf(0, 0, FormatStr, Args);
 
-    ReturnCode = vsnprintf(0, 0, FormatStr, Args);
-
-    va_end(Args);
-  }
-
-  // If snprintf() failed, return
+  // If vsnprintf() failed, return
   if (ReturnCode < 0)
-  {
-    return;
-  }
+    return false;
 
   // Assert: ReturnCode >= 0
 
-  // Positive return code is theoretical result string length.
+  // Positive return code is theoretical result string length
   TUint_2 MemoryRequired = (TUint_2) ReturnCode;
 
   /*
     Okay, let's allocate memory and do _real_ call!
   */
 
-  TManagedMemory Asciiz;
+  me_ManagedMemory::TManagedMemory Asciiz;
 
   // If no memory for ASCIIZ, return
   // ASCIIZ requires one more byte for tail
   if (!Asciiz.ResizeTo(MemoryRequired + 1))
-  {
-    return;
-  }
+    return false;
 
   /*
     We don't expect 2nd call to fail. It's same format string
-    and arguments. Only buffer address and buffer size changed.
-    So we're not checking for return code.
+    and arguments. Only buffer address and buffer size are changed.
+    But we still check for error code and return if bad.
   */
-  {
-    va_start(Args, FormatStr);
+  ReturnCode =
+    vsnprintf(
+      (TChar *) Asciiz.GetData().Start.Addr,
+      Asciiz.GetSize(),
+      FormatStr,
+      Args
+    );
 
-    ReturnCode =
-      vsnprintf(
-        (TChar *) Asciiz.GetData().Start.Addr,
-        Asciiz.GetSize(),
-        FormatStr,
-        Args
-      );
-
-    va_end(Args);
-  }
+  if (ReturnCode < 0)
+    return false;
 
   // Finally! But if no memory for <Data>, return
-  if (!Data.LoadFrom(&Asciiz))
-    return;
+  if (!ResultSeg->LoadFrom(&Asciiz))
+    return false;
+
+  // Assert: ResultSeg.Size >= 1
 
   // Trim tail zero byte from ASCIIZ
-  Data.ResizeTo(Data.GetSize() - 1);
+  if (!ResultSeg->ResizeTo(ResultSeg->GetSize() - 1))
+    return false;
+
+  return true;
 }
 
 /*
   2024-10-04
   2024-10-07
+  2024-10-08
 */

@@ -10,6 +10,8 @@
 #include <me_MemorySegment.h>
 #include <me_ManagedMemory.h>
 
+#include <stdarg.h> // "va_list" for free free function Format()
+
 namespace me_String
 {
   class TString
@@ -25,15 +27,22 @@ namespace me_String
       // Copy from our specie
       TBool CopyFrom(TString String);
 
-      // Copy our string to memory segment
-      TBool CopyTo(me_ManagedMemory::TManagedMemory * Memseg);
-
       // Format string
-      void Format(const TChar * FormatStr, ...);
+      TBool Format(const TChar * FormatStr, ...);
 
     private:
       me_ManagedMemory::TManagedMemory Data;
   };
+
+  namespace Freetown
+  {
+    // Format string
+    TBool Format(
+      me_ManagedMemory::TManagedMemory * Result,
+      const TChar * FormatStr,
+      va_list Args
+    );
+  }
 }
 
 /*
