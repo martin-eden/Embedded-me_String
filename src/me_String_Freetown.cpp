@@ -126,15 +126,15 @@ TBool IsDigit(TUint_1 Value)
 
 /*
   Return ASCII value for digit
+
+  For bad input returns "?" character.
 */
-TBool DigToChar(TChar * DigChar, TUint_1 Digit)
+TChar DigToChar(TUint_1 Digit)
 {
   if (!IsDigit(Digit))
-    return false;
+    return '?';
 
-  *DigChar = '0' + Digit; // < U C
-
-  return true;
+  return ('0' + Digit); // <3 U C
 }
 
 /*
@@ -164,20 +164,14 @@ TBool me_String::Freetown::FormatUint_4(
   RawMem = Result->GetData();
 
   for (TUint_1 Offset = 0; Offset < RawMem.Size; ++Offset)
-  {
-    TChar DigChar;
-    DigToChar(&DigChar, 0);
-    RawMem.Bytes[Offset] = DigChar;
-  }
+    RawMem.Bytes[Offset] = DigToChar(0);
 
   TUint_1 Offset = RawMem.Size - 1;
   while (Value > 0)
   {
     TUint_1 LastDigit = Value % 10;
 
-    TChar DigChar;
-    DigToChar(&DigChar, LastDigit);
-    RawMem.Bytes[Offset] = DigChar;
+    RawMem.Bytes[Offset] = DigToChar(LastDigit);
 
     if (Offset == 0)
       break;
