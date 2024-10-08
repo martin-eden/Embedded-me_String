@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Status: sketching
+  Status: sketched
   Last mod.: 2024-10-08
 */
 
@@ -29,6 +29,19 @@ namespace me_String
 
       // Format string
       TBool Format(const TChar * FormatStr, ...);
+      // Format TUint_1
+      TBool Format(TUint_1 Value);
+      // Format TUint_2
+      TBool Format(TUint_2 Value);
+      // Format TUint_4
+      TBool Format(TUint_4 Value);
+      // Format TSint_1
+      TBool Format(TSint_1 Value);
+      // Format TSint_2
+      TBool Format(TSint_2 Value);
+      // Format TSint_4
+      TBool Format(TSint_4 Value);
+
 
     private:
       me_ManagedMemory::TManagedMemory Data;
@@ -37,10 +50,24 @@ namespace me_String
   namespace Freetown
   {
     // Format string
-    TBool Format(
+    TBool FormatStr(
       me_ManagedMemory::TManagedMemory * Result,
       const TChar * FormatStr,
       va_list Args
+    );
+
+    // Format TUint_4 in given length with zero padding
+    TBool FormatUint_4(
+      me_ManagedMemory::TManagedMemory * Result,
+      TUint_1 ResultLen,
+      TUint_4 Value
+    );
+
+    // Format TUint_4 in given length with sign and zero padding
+    TBool FormatSint_4(
+      me_ManagedMemory::TManagedMemory * Result,
+      TUint_1 ResultLen,
+      TSint_4 Value
     );
   }
 }

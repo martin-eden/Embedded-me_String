@@ -35,7 +35,7 @@ void RunTest()
   String.Format("Test [%02u.%02u %02u].", 3, 14, 15);
   Console.Print(String.GetData());
 
-  String.Format("123");
+  String.Format(123);
   Console.Print(String.GetData());
 
   String.Format("ABCDEF");

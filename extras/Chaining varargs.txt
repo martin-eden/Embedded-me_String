@@ -1,0 +1,33 @@
+// Based on from commit message
+
+Chaining variadic functions
+
+
+You can't have
+
+  function foo(...)
+    return baz(...)
+  end
+
+in C. Not in 2024.
+
+But those byte smashers provide "workaround":
+
+  // baz.h:
+  #include <stdarg.h> // for "va_list"
+
+  function baz(va_list args) end
+
+  // foo.h:
+  #include <stdarg.h> // for "va_list", "va_start", "va_end"
+
+  function foo(...)
+    va_list args
+    va_start(args)
+    local result = baz(args)
+    va_end(args)
+    return result
+  end
+
+Ugly as hell. Why I'm using language that does not support anything
+with variable length in 2024?

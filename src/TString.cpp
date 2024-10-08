@@ -68,11 +68,78 @@ TBool TString::Format(
   va_list Args;
 
   va_start(Args, FormatStr);
-  Result = me_String::Freetown::Format(&Data, FormatStr, Args);
+  Result = me_String::Freetown::FormatStr(&Data, FormatStr, Args);
   va_end(Args);
 
   return Result;
 }
+
+/*
+  Format TUint_1
+*/
+TBool TString::Format(
+  TUint_1 Value
+)
+{
+  const TUint_1 Width = 3;
+  return me_String::Freetown::FormatUint_4(&Data, Width, (TUint_4) Value);
+}
+
+/*
+  Format TUint_2
+*/
+TBool TString::Format(
+  TUint_2 Value
+)
+{
+  const TUint_1 Width = 5;
+  return me_String::Freetown::FormatUint_4(&Data, Width, (TUint_4) Value);
+}
+
+/*
+  Format TUint_4
+*/
+TBool TString::Format(
+  TUint_4 Value
+)
+{
+  const TUint_1 Width = 10;
+  return me_String::Freetown::FormatUint_4(&Data, Width, Value);
+}
+
+/*
+  Format TSint_1
+*/
+TBool TString::Format(
+  TSint_1 Value
+)
+{
+  const TUint_1 Width = 4;
+  return me_String::Freetown::FormatSint_4(&Data, Width, (TSint_4) Value);
+}
+
+/*
+  Format TSint_2
+*/
+TBool TString::Format(
+  TSint_2 Value
+)
+{
+  const TUint_1 Width = 6;
+  return me_String::Freetown::FormatSint_4(&Data, Width, (TSint_4) Value);
+}
+
+/*
+  Format TSint_4
+*/
+TBool TString::Format(
+  TSint_4 Value
+)
+{
+  const TUint_1 Width = 11;
+  return me_String::Freetown::FormatSint_4(&Data, Width, Value);
+}
+
 
 /*
   2024-10-04

@@ -27,7 +27,7 @@
 
   Implementation uses vsnprintf().
 */
-TBool me_String::Freetown::Format(
+TBool me_String::Freetown::FormatStr(
   me_ManagedMemory::TManagedMemory * ResultSeg,
   const TChar * FormatStr,
   va_list Args
@@ -104,6 +104,117 @@ TBool me_String::Freetown::Format(
   // Trim tail zero byte from ASCIIZ
   if (!ResultSeg->ResizeTo(ResultSeg->GetSize() - 1))
     return false;
+
+  return true;
+}
+
+/*
+  All integer formatting functions represent number as fixed-length
+  string with leading zeroes.
+
+  All signed integer formatting functions represent number with
+  leading sign. Sign of zero considered "+".
+*/
+
+/*
+  Check that given number falls in decimal digits range [0, 9]
+*/
+TBool IsDigit(TUint_1 Value)
+{
+  return (Value <= 9);
+}
+
+/*
+  Return ASCII value for digit
+*/
+TBool DigToChar(TChar * DigChar, TUint_1 Digit)
+{
+  if (!IsDigit(Digit))
+    return false;
+
+  *DigChar = '0' + Digit; // < U C
+
+  return true;
+}
+
+/*
+  Format TUint_4 in given length with zero padding
+*/
+TBool me_String::Freetown::FormatUint_4(
+  me_ManagedMemory::TManagedMemory * Result,
+  TUint_1 ResultLen,
+  TUint_4 Value
+)
+{
+  // No memory, return
+  if (!Result->ResizeTo(ResultLen))
+    return false;
+
+  // Zero length? Job done!
+  if (ResultLen == 0)
+    return true;
+
+  me_MemorySegment::TMemorySegment RawMem;
+
+  /*
+    We're getting allocated memory span for result and
+    writing directly to it.
+  */
+
+  RawMem = Result->GetData();
+
+  for (TUint_1 Offset = 0; Offset < RawMem.Size; ++Offset)
+  {
+    TChar DigChar;
+    DigToChar(&DigChar, 0);
+    RawMem.Bytes[Offset] = DigChar;
+  }
+
+  TUint_1 Offset = RawMem.Size - 1;
+  while (Value > 0)
+  {
+    TUint_1 LastDigit = Value % 10;
+
+    TChar DigChar;
+    DigToChar(&DigChar, LastDigit);
+    RawMem.Bytes[Offset] = DigChar;
+
+    if (Offset == 0)
+      break;
+
+    --Offset;
+    Value = Value / 10;
+  }
+
+  return true;
+}
+
+/*
+  Format TSint_4 in given length with leading sign and zero padding
+*/
+TBool me_String::Freetown::FormatSint_4(
+  me_ManagedMemory::TManagedMemory * Result,
+  TUint_1 ResultLen,
+  TSint_4 Value
+)
+{
+  if (ResultLen == 0)
+    return true;
+
+  TBool IsNegative = (Value < 0);
+  if (IsNegative)
+    Value = -Value;
+
+  if (!FormatUint_4(Result, ResultLen, Value))
+    return false;
+
+  TChar SignChar;
+  if (IsNegative)
+    SignChar = '-';
+  else
+    SignChar = '+';
+
+  Result->GetData().Bytes[0] = SignChar;
 
   return true;
 }
