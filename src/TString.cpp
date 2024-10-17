@@ -2,15 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-08
-*/
-
-/*
-  Actually we're using string formatting implementation from
-  snprintf().
-
-  Point of creating this module was not new functionality
-  but presenting functionality in convenient and sane way.
+  Last mod.: 2024-10-17
 */
 
 #include "me_String.h"
@@ -75,74 +67,8 @@ TBool TString::Format(
 }
 
 /*
-  Format TUint_1
-*/
-TBool TString::Format(
-  TUint_1 Value
-)
-{
-  const TUint_1 Width = 3;
-  return me_String::Freetown::FormatUint_4(&Data, Width, (TUint_4) Value);
-}
-
-/*
-  Format TUint_2
-*/
-TBool TString::Format(
-  TUint_2 Value
-)
-{
-  const TUint_1 Width = 5;
-  return me_String::Freetown::FormatUint_4(&Data, Width, (TUint_4) Value);
-}
-
-/*
-  Format TUint_4
-*/
-TBool TString::Format(
-  TUint_4 Value
-)
-{
-  const TUint_1 Width = 10;
-  return me_String::Freetown::FormatUint_4(&Data, Width, Value);
-}
-
-/*
-  Format TSint_1
-*/
-TBool TString::Format(
-  TSint_1 Value
-)
-{
-  const TUint_1 Width = 4;
-  return me_String::Freetown::FormatSint_4(&Data, Width, (TSint_4) Value);
-}
-
-/*
-  Format TSint_2
-*/
-TBool TString::Format(
-  TSint_2 Value
-)
-{
-  const TUint_1 Width = 6;
-  return me_String::Freetown::FormatSint_4(&Data, Width, (TSint_4) Value);
-}
-
-/*
-  Format TSint_4
-*/
-TBool TString::Format(
-  TSint_4 Value
-)
-{
-  const TUint_1 Width = 11;
-  return me_String::Freetown::FormatSint_4(&Data, Width, Value);
-}
-
-
-/*
   2024-10-04
   2024-10-07
   2024-10-08
+  2024-10-17
 */

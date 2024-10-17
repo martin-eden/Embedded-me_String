@@ -2,15 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-08
-*/
-
-/*
-  Actually we're using string formatting implementation from
-  snprintf().
-
-  Point of creating this module was not new functionality
-  but presenting functionality in convenient and sane way.
+  Last mod.: 2024-10-17
 */
 
 #include "me_String.h"
@@ -138,69 +130,75 @@ TChar DigToChar(TUint_1 Digit)
 }
 
 /*
-  Format TUint_4 in given length with zero padding
+  TUint_4 to ASCII
+
+  Zeroes padding.
+
+  Arguments
+
+    TMemorySegment Result
+
+      We will write characters here. Segment should describe
+      valid memory to which we can write.
+
+    TUint_4 Value
+
+      Value we're representing
 */
-TBool me_String::Freetown::FormatUint_4(
-  me_ManagedMemory::TManagedMemory * Result,
-  TUint_1 ResultLen,
+void me_String::Freetown::FormatUint_4(
+  me_MemorySegment::TMemorySegment Result,
   TUint_4 Value
 )
 {
-  // No memory, return
-  if (!Result->ResizeTo(ResultLen))
-    return false;
-
   // Zero length? Job done!
-  if (ResultLen == 0)
-    return true;
+  if (Result.Size == 0)
+    return;
 
-  me_MemorySegment::TMemorySegment RawMem;
+  // Initially fill Result with "0" characters
+  for (TUint_1 Offset = 0; Offset < Result.Size; ++Offset)
+    Result.Bytes[Offset] = DigToChar(0);
 
-  /*
-    We're getting allocated memory span for result and
-    writing directly to it.
-  */
-
-  RawMem = Result->GetData();
-
-  for (TUint_1 Offset = 0; Offset < RawMem.Size; ++Offset)
-    RawMem.Bytes[Offset] = DigToChar(0);
-
-  TUint_1 Offset = RawMem.Size - 1;
+  // Write digits from least to most significant
+  TUint_1 Offset = Result.Size - 1;
   while (Value > 0)
   {
     TUint_1 LastDigit = Value % 10;
 
-    RawMem.Bytes[Offset] = DigToChar(LastDigit);
+    Result.Bytes[Offset] = DigToChar(LastDigit);
 
+    Value = Value / 10;
+
+    // No more space to write, break
     if (Offset == 0)
       break;
 
     --Offset;
-    Value = Value / 10;
   }
-
-  return true;
 }
 
 /*
-  Format TSint_4 in given length with leading sign and zero padding
+  TSint_4 to ASCII
+
+  Zeroes padding, "+"/"-" sign. Zero has sign "+".
 */
-TBool me_String::Freetown::FormatSint_4(
-  me_ManagedMemory::TManagedMemory * Result,
-  TUint_1 ResultLen,
+void me_String::Freetown::FormatSint_4(
+  me_MemorySegment::TMemorySegment Result,
   TSint_4 Value
 )
 {
-  if (ResultLen == 0)
-    return true;
+  if (Result.Size == 0)
+    return;
 
   TBool IsNegative = (Value < 0);
-  if (IsNegative)
-    Value = -Value;
 
-  if (!FormatUint_4(Result, ResultLen, Value))
-    return false;
+  TUint_4 Uint_4_Value;
+
+  if (IsNegative)
+    Uint_4_Value = -Value;
+  else
+    Uint_4_Value = Value;
+
+  FormatUint_4(Result, Uint_4_Value);
 
   TChar SignChar;
   if (IsNegative)
@@ -208,13 +206,12 @@ TBool me_String::Freetown::FormatSint_4(
   else
     SignChar = '+';
 
-  Result->GetData().Bytes[0] = SignChar;
-
-  return true;
+  Result.Bytes[0] = SignChar;
 }
 
 /*
   2024-10-04
   2024-10-07
   2024-10-08
+  2024-10-17 Simplification
 */

@@ -5,29 +5,20 @@
 Experimental library for strings. AVR. Arduino.
 
 
-## Details
-
-### What "me_String" does
-
-It allows you to print values of basic types without thinking of their
-representation. They will be represented in some consistent way
-and you'd better love the way they are represented. Or modify
-implementation to suit your taste.
-
-### Growth directions
-
-Most likely I'll need concatenation at some time. Maybe trimming.
-Possibly hex representation.
-
-
 ## Sample output
 
 ```
 [me_String] Okay, we are here.
-Test [03.14 15].
-+00123
-ABCDEF
+  * Formatting with C specifiers
+[me_String] Okay, we are here.
+  * Formatting with C specifiers
+    Test [03.14 15].
+  * Formatting integers
+    00000000000000000123
+    -0000000002147483648
+    00000000002147483648
 [me_String] Done.
+
 ```
 
 ## Code
