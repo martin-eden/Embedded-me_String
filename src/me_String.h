@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-17
+  Last mod.: 2024-10-23
 */
 
 #include <me_BaseTypes.h>
@@ -48,7 +48,7 @@ namespace me_String
       TUint_4 Value
     );
 
-    // Format TUint_4 in given length with sign and zero padding
+    // Format TSint_4 in given length with sign and zero padding
     void FormatSint_4(
       me_MemorySegment::TMemorySegment Result,
       TSint_4 Value
