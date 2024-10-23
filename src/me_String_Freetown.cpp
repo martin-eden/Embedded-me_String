@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-17
+  Last mod.: 2024-10-23
 */
 
 #include "me_String.h"
@@ -78,7 +78,7 @@ TBool me_String::Freetown::FormatStr(
   */
   ReturnCode =
     vsnprintf(
-      (TChar *) Asciiz.GetData().Start.Addr,
+      (TChar *) Asciiz.GetData().Addr,
       Asciiz.GetSize(),
       FormatStr,
       Args
